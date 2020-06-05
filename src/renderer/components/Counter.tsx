@@ -11,7 +11,7 @@ export interface Props {
 }
 
 const Counter: React.FunctionComponent<Props> = ({ value, incrementValue, decrementValue }) => (
-    <div className="counter">
+    <div className="bg-gray-400">
         <p>
             <img src={redCubeImg} alt="Red cube" />
         </p>
