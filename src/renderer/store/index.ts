@@ -1,7 +1,18 @@
-import { applyMiddleware, createStore, Store } from 'redux';
+import { applyMiddleware, createStore, combineReducers, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { filesReducer } from './files/reducer';
+import { FilesState, FilesActionTypes } from './files/types';
+import { ConvertState, ConvertActionTypes } from './convert/types';
+import { convertReducer } from './convert/reducer';
 
-import { rootReducer, RootState } from '../reducers';
+
+const rootReducer = combineReducers({
+    convert: convertReducer,
+    files: filesReducer
+});
+
+export type RootAction = ConvertActionTypes | FilesActionTypes
+export type RootState = ReturnType<typeof rootReducer>
 
 const configureStore = (initialState?: RootState): Store<RootState | undefined> => {
     const middlewares: any[] = [];
@@ -10,11 +21,5 @@ const configureStore = (initialState?: RootState): Store<RootState | undefined> 
 };
 
 const store = configureStore();
-
-if (typeof module.hot !== 'undefined') {
-    module.hot.accept('../reducers', () =>
-        store.replaceReducer(require('../reducers').rootReducer)
-    );
-}
 
 export default store;
