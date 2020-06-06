@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { ReactElement } from "react";
 import { connect } from 'react-redux';
 import prettyBytes from "pretty-bytes";
+import { DropzoneInputProps, DropzoneRootProps } from "react-dropzone";
 import {selectFiles} from "../store/files/actions"
 import Table from "./Table";
 import TableRow from "./TableRow";
 import { RootState } from "../store";
-import { FileEvent, FilesState } from "../store/files/types";
-
+import { FileEvent } from "../store/files/types";
 
 interface ReactProps {
   getRootProps: (props?: DropzoneRootProps) => DropzoneRootProps
@@ -16,7 +16,7 @@ interface ReactProps {
 
 type Props = ReactProps & StateProps & DispatchProps
 
-function Dropzone(props: Props): React.FC<Props> {
+function Dropzone(props: Props): ReactElement {
   const handleSelected = (state: number[], index: number): boolean => {
     return !!state.includes(index);
   };
@@ -27,8 +27,7 @@ function Dropzone(props: Props): React.FC<Props> {
         className:
           "w-screen flex items-center content-center border-dashed border-4 border-gray-600 bg-gray-100 hover:bg-white",
         onClick: () => props.open()
-      })}
-    >
+      })}>
       <input {...props.getInputProps()} />
       <p className="m-auto text-xl font-medium text-gray-600 text-center">
         Drag 'n' drop files here, or click Add File(s).
@@ -40,8 +39,7 @@ function Dropzone(props: Props): React.FC<Props> {
     <div
       {...props.getRootProps({
         className: "w-full"
-      })}
-    >
+      })}>
       <input {...props.getInputProps()} />
       <Table head={["Name", "Size", "Status"]}>
         {props.files.map((file, idx) => (
@@ -55,9 +53,10 @@ function Dropzone(props: Props): React.FC<Props> {
             selected={handleSelected(props.selected.items, idx)}
             mode={file.mode}
             onClick={e => props.selectFiles(e, idx)}
-          />
+            />
         ))}
       </Table>
+      {/* eslint-disable-next-line */}
       <div className="" onMouseDown={e => props.selectFiles(e, null)} />
     </div>
   );
@@ -65,21 +64,18 @@ function Dropzone(props: Props): React.FC<Props> {
   return <>{props.files.length > 0 ? files : zone}</>;
 }
 
-type StateProps = FilesState
+type StateProps = ReturnType<typeof mapStateToProps>
+type DispatchProps = ReturnType<typeof mapDispatchToProps>
 
-interface DispatchProps {
-  selectFiles: (event: FileEvent, index: number) => void
-}
-
-const mapStateToProps = (state: RootState): StateProps => {
+const mapStateToProps = (state: RootState) => {
   return {
       files: state.files.files,
       selected: state.files.selected
   }
 }
 
-const mapDispatchToProps = (dispatch): DispatchProps => ({
-  selectFiles: (event: FileEvent, index: number) => dispatch(selectFiles(event, index))
+const mapDispatchToProps = (dispatch) => ({
+  selectFiles: (event: FileEvent, index: number | null): void => dispatch(selectFiles(event, index))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dropzone);

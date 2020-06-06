@@ -9,21 +9,21 @@ export type FileStatus = "Waiting" | "Queued" | "Processing" | "Completed" | "Fa
 
 export type FileEvent = React.DragEvent | React.MouseEvent | React.KeyboardEvent
 
-export interface File {
+export interface AppFile {
     id?: string
-    fullPath: string
+    fullPath?: string
     lastModified: number
-    lastModifiedDate: Date
+    lastModifiedDate?: Date
     name: string
     size: number
     status?: FileStatus
     fileObject?: any
-    type?: string | undefined
     webkitRelativePath?: string
+    type?: string
 }
 
 export interface FilesState {
-    files: File[]
+    files: AppFile[]
     selected: {
         items: number[]
         pivot: number | null
@@ -32,7 +32,7 @@ export interface FilesState {
 
 interface AddFilesAction {
     type: typeof ADD_FILES
-    files: File[]
+    files: AppFile[]
     status: FileStatus
 }
 
@@ -43,7 +43,7 @@ interface RemoveFilesAction {
 interface SelectFilesAction {
     type: typeof SELECT_FILES
     event: FileEvent
-    index: number
+    index: number | null
 }
 
 interface ClearFilesAction {
