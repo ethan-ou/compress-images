@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 /**
  * The MIT License
 
@@ -26,6 +28,47 @@ THE SOFTWARE.
 import mime from "mime-types";
 import { AppFile } from "../store/files/types";
 
+interface FileSystemEntry {
+  isDirectory: boolean
+  isFile: boolean
+}
+
+interface FileSystemDirectoryReader {
+  readEntries(
+    successCallback: (result: FileSystemEntry[]) => void,
+    errorCallback?: (error: DOMError) => void,
+  ): void
+}
+
+interface FileSystemFlags {
+  create?: boolean
+  exclusive?: boolean
+}
+
+interface FileSystemDirectoryEntry extends FileSystemEntry {
+  isDirectory: true
+  isFile: false
+  createReader(): FileSystemDirectoryReader
+  getFile(
+    path?: string,
+    options?: FileSystemFlags,
+    successCallback?: (result: FileSystemFileEntry) => void,
+    errorCallback?: (error: DOMError) => void,
+  ): void
+  getDirectory(
+    path?: string,
+    options?: FileSystemFlags,
+    successCallback?: (result: FileSystemDirectoryEntry) => void,
+    errorCallback?: (error: DOMError) => void,
+  ): void
+}
+
+interface FileSystemFileEntry extends FileSystemEntry {
+  isDirectory: false
+  isFile: true
+  file(cb: (file: File) => void): void
+}
+
 const DEFAULT_FILES_TO_IGNORE = [
     '.DS_Store', // OSX indexing file
     'Thumbs.db'  // Windows indexing file
@@ -38,14 +81,13 @@ const DEFAULT_FILES_TO_IGNORE = [
   function copyString(aString) {
     return ` ${aString}`.slice(1);
   }
-  
-  function traverseDirectory(entry) {
+
+  function traverseDirectory(entry: any) {
     const reader = entry.createReader();
     // Resolved when the entire directory is traversed
-    return new Promise((resolveDirectory) => {
-      const iterationAttempts = [];
-      const errorHandler = () => {};
-      function readEntries() {
+    return new Promise((resolveDirectory: any) => {
+      const iterationAttempts: any[] = [];
+      const readEntries = () => {
         // According to the FileSystem API spec, readEntries() must be called until
         // it calls the callback with an empty array.
         reader.readEntries((batchEntries) => {
@@ -64,7 +106,9 @@ const DEFAULT_FILES_TO_IGNORE = [
             // Try calling readEntries() again for the same dir, according to spec
             readEntries();
           }
-        }, errorHandler);
+        }, (err) => {
+          throw new Error(err.toString())
+        });
       }
       // initial call to recursive entry reader function
       readEntries();
@@ -81,7 +125,7 @@ const DEFAULT_FILES_TO_IGNORE = [
 
     return {
       fileObject: file, // provide access to the raw File object (required for uploading)
-      fullPath: entry ? copyString(entry.fullPath) : file.name,
+      path: file.path,
       lastModified: file.lastModified,
       lastModifiedDate: file.lastModifiedDate,
       name: file.name,
@@ -130,6 +174,7 @@ const DEFAULT_FILES_TO_IGNORE = [
         dataTransferFiles.push(listItem);
       }
     });
+    
     if (folderPromises.length) {
       const flatten = (array) => array.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
       return Promise.all(folderPromises).then((fileEntries) => {
@@ -140,9 +185,12 @@ const DEFAULT_FILES_TO_IGNORE = [
         });
         return handleFilePromises(filePromises, dataTransferFiles);
       });
-    } else if (filePromises.length) {
+    } 
+    
+    if (filePromises.length) {
       return handleFilePromises(filePromises, dataTransferFiles);
     }
+
     return Promise.resolve(dataTransferFiles);
   }
   
@@ -155,7 +203,7 @@ const DEFAULT_FILES_TO_IGNORE = [
    * Returns: an array of File objects, that includes all files within folders
    *   and subfolders of the dropped/selected items.
    */
-  export function getDroppedOrSelectedFiles(event) {
+  export function getDroppedOrSelectedFiles(event: any) {
     const { dataTransfer } = event;
     if (dataTransfer && dataTransfer.items) {
       return getDataTransferFiles(dataTransfer).then((fileList) => {

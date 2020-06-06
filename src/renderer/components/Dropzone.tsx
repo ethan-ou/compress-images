@@ -7,6 +7,7 @@ import Table from "./Table";
 import TableRow from "./TableRow";
 import { RootState } from "../store";
 import { FileEvent } from "../store/files/types";
+import { toLocalURL } from "../utils";
 
 interface ReactProps {
   getRootProps: (props?: DropzoneRootProps) => DropzoneRootProps
@@ -30,7 +31,7 @@ function Dropzone(props: Props): ReactElement {
       })}>
       <input {...props.getInputProps()} />
       <p className="m-auto text-xl font-medium text-gray-600 text-center">
-        Drag 'n' drop files here, or click Add File(s).
+        Drag &apos;n&apos; drop files here, or click Add File(s).
       </p>
     </div>
   );
@@ -46,12 +47,11 @@ function Dropzone(props: Props): ReactElement {
           <TableRow
             key={file.id}
             name={file.name}
-            type={file.type}
             size={prettyBytes(file.size)}
-            img={file.preview}
+            img={toLocalURL(file.path)}
             even={idx}
             selected={handleSelected(props.selected.items, idx)}
-            mode={file.mode}
+            status={file.status}
             onClick={e => props.selectFiles(e, idx)}
             />
         ))}

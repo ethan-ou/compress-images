@@ -11,15 +11,15 @@ export type FileEvent = React.DragEvent | React.MouseEvent | React.KeyboardEvent
 
 export interface AppFile {
     id?: string
-    fullPath?: string
     lastModified: number
     lastModifiedDate?: Date
     name: string
+    path: string
     size: number
+    type: string
+    webkitRelativePath?: string
     status?: FileStatus
     fileObject?: any
-    webkitRelativePath?: string
-    type?: string
 }
 
 export interface FilesState {
