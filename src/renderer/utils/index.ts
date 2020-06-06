@@ -1,4 +1,4 @@
-import { getDroppedOrSelectedFiles } from "./fileSelector"
-import { toLocalURL } from "./localFile"
+import { getDroppedOrSelectedFiles } from './fileSelector';
+import { toLocalURL } from './localFile';
 
-export { getDroppedOrSelectedFiles, toLocalURL }
+export { getDroppedOrSelectedFiles, toLocalURL };

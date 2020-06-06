@@ -13,7 +13,7 @@ interface ReactProps {
 type Props = ReactProps & StateProps & DispatchProps;
 
 function Toolbar(props: Props): ReactElement {
-  const handleSettings = setting => {
+  const handleSettings = (setting) => {
     // dispatch({ type: "OPEN_SETTINGS", state: setting });
   };
 
@@ -126,7 +126,7 @@ function Toolbar(props: Props): ReactElement {
         <line x1="15" y1="9" x2="9" y2="15" />
         <line x1="9" y1="9" x2="15" y2="15" />
       </svg>
-    )
+    ),
   };
   const button = {
     add: (
@@ -182,7 +182,7 @@ function Toolbar(props: Props): ReactElement {
       >
         {icons.cancel}
       </ToolbarButton>
-    )
+    ),
   };
 
   //Icons from: https://feathericons.com/
@@ -206,14 +206,14 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 const mapStateToProps = (state: RootState) => {
   return {
-    mode: state.convert.mode
+    mode: state.convert.mode,
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   removeFiles: () => dispatch(removeFiles()),
   clearFiles: () => dispatch(clearFiles()),
   startConvert: () => dispatch(startConvert()),
-  cancelConvert: () => dispatch(cancelConvert())
+  cancelConvert: () => dispatch(cancelConvert()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

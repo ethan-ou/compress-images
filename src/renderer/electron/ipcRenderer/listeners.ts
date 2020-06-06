@@ -1,5 +1,3 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
-export default function initIpcListeners(): void {
-
-}
+export default function initIpcListeners(): void {}

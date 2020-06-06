@@ -1,3 +1,3 @@
 export function toLocalURL(url: string) {
-    return `file:///${url}`
+  return `file:///${url}`;
 }

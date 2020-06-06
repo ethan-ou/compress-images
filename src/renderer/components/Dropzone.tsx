@@ -28,7 +28,7 @@ function Dropzone(props: Props): ReactElement {
       {...props.getRootProps({
         className:
           'w-screen flex items-center content-center border-dashed border-4 border-gray-600 bg-gray-100 hover:bg-white',
-        onClick: () => props.open()
+        onClick: () => props.open(),
       })}
     >
       <input {...props.getInputProps()} />
@@ -41,7 +41,7 @@ function Dropzone(props: Props): ReactElement {
   const files = (
     <div
       {...props.getRootProps({
-        className: 'w-full'
+        className: 'w-full',
       })}
     >
       <input {...props.getInputProps()} />
@@ -55,12 +55,12 @@ function Dropzone(props: Props): ReactElement {
             even={idx}
             selected={handleSelected(props.selected.items, idx)}
             status={file.status}
-            onClick={e => props.selectFiles(e, idx)}
+            onClick={(e) => props.selectFiles(e, idx)}
           />
         ))}
       </Table>
       {/* eslint-disable-next-line */}
-      <div className="" onMouseDown={e => props.selectFiles(e, null)} />
+      <div className="" onMouseDown={(e) => props.selectFiles(e, null)} />
     </div>
   );
 
@@ -73,12 +73,12 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 const mapStateToProps = (state: RootState) => {
   return {
     files: state.files.files,
-    selected: state.files.selected
+    selected: state.files.selected,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  selectFiles: (event: FileEvent, index: number | null) => dispatch(selectFiles(event, index))
+  selectFiles: (event: FileEvent, index: number | null) => dispatch(selectFiles(event, index)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dropzone);

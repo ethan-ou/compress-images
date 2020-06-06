@@ -71,7 +71,7 @@ interface FileSystemFileEntry extends FileSystemEntry {
 
 const DEFAULT_FILES_TO_IGNORE = [
   '.DS_Store', // OSX indexing file
-  'Thumbs.db' // Windows indexing file
+  'Thumbs.db', // Windows indexing file
 ];
 
 function shouldIgnoreFile(file) {
@@ -87,7 +87,7 @@ function traverseDirectory(entry: any) {
       // According to the FileSystem API spec, readEntries() must be called until
       // it calls the callback with an empty array.
       reader.readEntries(
-        batchEntries => {
+        (batchEntries) => {
           if (!batchEntries.length) {
             // Done iterating this particular directory
             resolveDirectory(Promise.all(iterationAttempts));
@@ -96,7 +96,7 @@ function traverseDirectory(entry: any) {
             // a directory, then that promise won't resolve until it is fully traversed.
             iterationAttempts.push(
               Promise.all(
-                batchEntries.map(batchEntry => {
+                batchEntries.map((batchEntry) => {
                   if (batchEntry.isDirectory) {
                     return traverseDirectory(batchEntry);
                   }
@@ -108,7 +108,7 @@ function traverseDirectory(entry: any) {
             readEntries();
           }
         },
-        err => {
+        (err) => {
           throw new Error(err.toString());
         }
       );
@@ -134,21 +134,21 @@ function packageFile(file, entry): AppFile {
     name: file.name,
     size: file.size,
     type: file.type ? file.type : mimeType,
-    webkitRelativePath: file.webkitRelativePath
+    webkitRelativePath: file.webkitRelativePath,
   };
 }
 
 function getFile(entry) {
-  return new Promise(resolve => {
-    entry.file(file => {
+  return new Promise((resolve) => {
+    entry.file((file) => {
       resolve(packageFile(file, entry));
     });
   });
 }
 
 function handleFilePromises(promises, fileList) {
-  return Promise.all(promises).then(files => {
-    files.forEach(file => {
+  return Promise.all(promises).then((files) => {
+    files.forEach((file) => {
       if (!shouldIgnoreFile(file)) {
         fileList.push(file);
       }
@@ -162,7 +162,7 @@ export function getDataTransferFiles(dataTransfer) {
   const folderPromises = [];
   const filePromises = [];
 
-  [].slice.call(dataTransfer.items).forEach(listItem => {
+  [].slice.call(dataTransfer.items).forEach((listItem) => {
     if (typeof listItem.webkitGetAsEntry === 'function') {
       const entry = listItem.webkitGetAsEntry();
 
@@ -179,12 +179,12 @@ export function getDataTransferFiles(dataTransfer) {
   });
 
   if (folderPromises.length) {
-    const flatten = array =>
+    const flatten = (array) =>
       array.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
-    return Promise.all(folderPromises).then(fileEntries => {
+    return Promise.all(folderPromises).then((fileEntries) => {
       const flattenedEntries = flatten(fileEntries);
       // collect async promises to convert each fileEntry into a File object
-      flattenedEntries.forEach(fileEntry => {
+      flattenedEntries.forEach((fileEntry) => {
         filePromises.push(getFile(fileEntry));
       });
       return handleFilePromises(filePromises, dataTransferFiles);
@@ -210,7 +210,7 @@ export function getDataTransferFiles(dataTransfer) {
 export function getDroppedOrSelectedFiles(event: any) {
   const { dataTransfer } = event;
   if (dataTransfer && dataTransfer.items) {
-    return getDataTransferFiles(dataTransfer).then(fileList => {
+    return getDataTransferFiles(dataTransfer).then((fileList) => {
       return Promise.resolve(fileList);
     });
   }

@@ -31,11 +31,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "react",
-    "prettier",
-    "@typescript-eslint"
-  ],
+  "plugins": ["react", "prettier", "@typescript-eslint"],
   "rules": {
     "global-require": 0,
     "import/prefer-default-export": 0,
