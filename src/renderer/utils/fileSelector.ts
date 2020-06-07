@@ -78,7 +78,7 @@ function shouldIgnoreFile(file) {
   return DEFAULT_FILES_TO_IGNORE.indexOf(file.name) >= 0;
 }
 
-function traverseDirectory(entry: any) {
+function traverseDirectory(entry: any): Promise<any> {
   const reader = entry.createReader();
   // Resolved when the entire directory is traversed
   return new Promise((resolveDirectory: any) => {
@@ -120,7 +120,7 @@ function traverseDirectory(entry: any) {
 
 // package the file in an object that includes the fullPath from the file entry
 // that would otherwise be lost
-function packageFile(file, entry): AppFile {
+function packageFile(file: any, entry?: any): AppFile {
   let mimeType: string | false | undefined = mime.lookup(file.name);
   if (mimeType === false) {
     mimeType = undefined;
@@ -146,7 +146,7 @@ function getFile(entry) {
   });
 }
 
-function handleFilePromises(promises, fileList) {
+function handleFilePromises(promises: Promise<any>[], fileList: Array<DataTransferItem>) {
   return Promise.all(promises).then((files) => {
     files.forEach((file) => {
       if (!shouldIgnoreFile(file)) {
@@ -157,10 +157,10 @@ function handleFilePromises(promises, fileList) {
   });
 }
 
-export function getDataTransferFiles(dataTransfer: DataTransfer) {
+export function getDataTransferFiles(dataTransfer: DataTransfer): Promise<any> {
   const dataTransferFiles: Array<DataTransferItem> = [];
-  const folderPromises = [];
-  const filePromises = [];
+  const folderPromises: Array<Promise<any>> = [];
+  const filePromises: Array<Promise<any>> = [];
 
   [].slice.call(dataTransfer.items).forEach((listItem: DataTransferItem) => {
     if (typeof listItem.webkitGetAsEntry === 'function') {
@@ -185,7 +185,6 @@ export function getDataTransferFiles(dataTransfer: DataTransfer) {
         []
       );
 
-    console.log(folderPromises, typeof folderPromises);
     return Promise.all(folderPromises).then((fileEntries) => {
       const flattenedEntries = flatten(fileEntries);
       // collect async promises to convert each fileEntry into a File object
@@ -212,7 +211,7 @@ export function getDataTransferFiles(dataTransfer: DataTransfer) {
  * Returns: an array of File objects, that includes all files within folders
  *   and subfolders of the dropped/selected items.
  */
-export function getDroppedOrSelectedFiles(event: any) {
+export function getDroppedOrSelectedFiles(event: any): Promise<any> {
   const { dataTransfer } = event;
   if (dataTransfer && dataTransfer.items) {
     return getDataTransferFiles(dataTransfer).then((fileList) => {

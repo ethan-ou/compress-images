@@ -6,7 +6,7 @@ interface Props {
   children: ReactElement[];
 }
 
-export default function Table(props: Props) {
+export default function Table(props: Props): ReactElement {
   return (
     <table className="w-full leading-normal">
       <thead>

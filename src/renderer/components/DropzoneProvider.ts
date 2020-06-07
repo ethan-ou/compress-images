@@ -1,10 +1,16 @@
-import { useDropzone, DropEvent } from 'react-dropzone';
+import { useDropzone, DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
 import { fromEvent } from 'file-selector';
 import { useDispatch } from 'react-redux';
 import { addFiles } from '../store/files/actions';
 import { getDroppedOrSelectedFiles } from '../utils';
 
-export default function DropzoneProvider() {
+interface Props {
+  getRootProps: (props?: DropzoneRootProps) => DropzoneRootProps;
+  getInputProps: (props?: DropzoneInputProps) => DropzoneInputProps;
+  open: () => void;
+}
+
+export default function DropzoneProvider(): Props {
   const dispatch = useDispatch();
   const { getRootProps, getInputProps, open } = useDropzone({
     getFilesFromEvent: async (event) => getDroppedOrSelectedFiles(event),

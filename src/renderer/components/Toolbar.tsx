@@ -201,9 +201,6 @@ function Toolbar(props: Props): ReactElement {
   );
 }
 
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
-
 const mapStateToProps = (state: RootState) => {
   return {
     mode: state.convert.mode,
@@ -215,5 +212,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   startConvert: () => dispatch(startConvert()),
   cancelConvert: () => dispatch(cancelConvert()),
 });
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

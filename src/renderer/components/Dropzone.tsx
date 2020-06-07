@@ -66,9 +66,6 @@ function Dropzone(props: Props): ReactElement {
   return <>{props.files.length > 0 ? files : zone}</>;
 }
 
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
-
 const mapStateToProps = (state: RootState) => {
   return {
     files: state.files.files,
@@ -79,5 +76,8 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   selectFiles: (event: FileEvent, index: number | null) => dispatch(selectFiles(event, index)),
 });
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dropzone);

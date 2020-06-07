@@ -7,7 +7,7 @@ interface Props {
   text: string;
 }
 
-export default function ToolbarButton(props: Props) {
+export default function ToolbarButton(props: Props): ReactElement {
   return (
     <button
       className={`text-xs font-semibold py-2 px-1 rounded flex flex-col items-stretch ${props.buttonStyles}`}
