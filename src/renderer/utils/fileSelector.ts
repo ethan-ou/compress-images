@@ -157,12 +157,12 @@ function handleFilePromises(promises, fileList) {
   });
 }
 
-export function getDataTransferFiles(dataTransfer) {
-  const dataTransferFiles = [];
+export function getDataTransferFiles(dataTransfer: DataTransfer) {
+  const dataTransferFiles: Array<DataTransferItem> = [];
   const folderPromises = [];
   const filePromises = [];
 
-  [].slice.call(dataTransfer.items).forEach((listItem) => {
+  [].slice.call(dataTransfer.items).forEach((listItem: DataTransferItem) => {
     if (typeof listItem.webkitGetAsEntry === 'function') {
       const entry = listItem.webkitGetAsEntry();
 
@@ -179,8 +179,13 @@ export function getDataTransferFiles(dataTransfer) {
   });
 
   if (folderPromises.length) {
-    const flatten = (array) =>
-      array.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+    const flatten = <T>(array: Array<T>): Array<T> =>
+      array.reduce(
+        (a: Array<T>, b: Array<T> | T) => a.concat(Array.isArray(b) ? flatten(b) : b),
+        []
+      );
+
+    console.log(folderPromises, typeof folderPromises);
     return Promise.all(folderPromises).then((fileEntries) => {
       const flattenedEntries = flatten(fileEntries);
       // collect async promises to convert each fileEntry into a File object
@@ -219,7 +224,7 @@ export function getDroppedOrSelectedFiles(event: any) {
   const inputFieldFileList = event.target && event.target.files;
   const fileList = dragDropFileList || inputFieldFileList || [];
   // convert the FileList to a simple array of File objects
-  for (let i = 0; i < fileList.length; i++) {
+  for (let i = 0; i < fileList.length; i += 1) {
     files.push(packageFile(fileList[i]));
   }
   return Promise.resolve(files);

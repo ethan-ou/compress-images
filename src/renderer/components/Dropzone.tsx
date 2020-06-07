@@ -8,7 +8,6 @@ import Table from './Table';
 import TableRow from './TableRow';
 import { RootState } from '../store';
 import { FileEvent } from '../store/files/types';
-import { toLocalURL } from '../utils';
 
 interface ReactProps {
   getRootProps: (props?: DropzoneRootProps) => DropzoneRootProps;
@@ -51,7 +50,7 @@ function Dropzone(props: Props): ReactElement {
             key={file.id}
             name={file.name}
             size={prettyBytes(file.size)}
-            img={toLocalURL(file.path)}
+            img={file.path}
             even={idx}
             selected={handleSelected(props.selected.items, idx)}
             status={file.status}

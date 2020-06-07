@@ -16,7 +16,7 @@ export default function File(props: Props): ReactElement {
     (Number.isInteger(props.even) && props.even % 2 !== 0) ||
     (Number.isInteger(props.odd) && props.odd % 2 === 0)
       ? 'bg-gray-100'
-      : '';
+      : 'bg-white';
 
   return (
     <tr
