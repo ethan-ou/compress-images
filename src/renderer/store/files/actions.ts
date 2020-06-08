@@ -4,10 +4,9 @@ import {
   SELECT_FILES,
   CLEAR_FILES,
   FilesActionTypes,
-  AppFile,
-  FileStatus,
   FileEvent,
 } from './types';
+import { AppFile, FileStatus } from '../../../types';
 
 // TODO: Remove files: any and event: any
 

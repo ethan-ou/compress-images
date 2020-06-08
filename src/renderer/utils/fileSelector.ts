@@ -26,7 +26,7 @@ THE SOFTWARE.
  */
 
 import mime from 'mime-types';
-import { AppFile } from '../store/files/types';
+import { AppFile } from '../../types';
 
 interface FileSystemEntry {
   isDirectory: boolean;

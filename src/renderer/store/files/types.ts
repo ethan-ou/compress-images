@@ -1,3 +1,5 @@
+import { AppFile, FileStatus } from '../../../types';
+
 export const ADD_FILES = 'ADD_FILES';
 export const REMOVE_FILES = 'REMOVE_FILES';
 export const SELECT_FILES = 'SELECT_FILES';
@@ -5,22 +7,7 @@ export const CLEAR_FILES = 'CLEAR_FILES';
 
 // TODO: Remove files: any and confirm event type.
 
-export type FileStatus = 'Waiting' | 'Queued' | 'Processing' | 'Completed' | 'Failed';
-
 export type FileEvent = React.DragEvent | React.MouseEvent | React.KeyboardEvent;
-
-export interface AppFile {
-  id?: string;
-  lastModified: number;
-  lastModifiedDate?: Date;
-  name: string;
-  path: string;
-  size: number;
-  type: string;
-  webkitRelativePath?: string;
-  status?: FileStatus;
-  fileObject?: any;
-}
 
 export interface FilesState {
   files: AppFile[];
