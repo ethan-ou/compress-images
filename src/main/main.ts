@@ -1,6 +1,7 @@
 import { app, BrowserWindow, protocol } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import initIpcListeners from './electron/listeners';
 
 let win: BrowserWindow | null;
 
@@ -73,4 +74,6 @@ app.whenReady().then(() => {
     const pathname = decodeURI(request.url.replace('file:///', ''));
     callback(pathname);
   });
+
+  initIpcListeners();
 });

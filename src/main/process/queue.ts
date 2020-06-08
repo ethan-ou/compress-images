@@ -20,5 +20,5 @@ async function handlePromises(promises: any[]): Promise<any> {
 }
 
 async function addFiles() {
-  return handlePromises();
+  return handlePromises(queue.add());
 }

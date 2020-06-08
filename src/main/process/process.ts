@@ -26,7 +26,7 @@ interface Options {
   rotate?: number;
   trim?: number;
   background?: string;
-  fit?: FitEnum;
+  fit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside' | undefined;
   stripMetadata?: boolean;
   toFormat?: Formats;
 }
