@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
+import { AppFile } from '../../../types';
 
-export async function startConvert(arg) {
-  return ipcRenderer.invoke('start:convert', arg);
+export async function startProcess(files: AppFile[]): Promise<void> {
+  return ipcRenderer.send('process:start', files);
 }

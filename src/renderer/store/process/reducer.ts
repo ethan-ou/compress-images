@@ -1,32 +1,32 @@
 import {
-  START_CONVERT,
-  CANCEL_CONVERT,
-  ConvertState,
-  FINISH_CONVERT,
-  ConvertActionTypes,
+  START_PROCESS,
+  CANCEL_PROCESS,
+  ProcessState,
+  FINISH_PROCESS,
+  ProcessActionTypes,
 } from './types';
 
-const initialState: ConvertState = {
+const initialState: ProcessState = {
   mode: 'INITIAL',
 };
 
-export function convertReducer(state = initialState, action: ConvertActionTypes): ConvertState {
+export function processReducer(state = initialState, action: ProcessActionTypes): ProcessState {
   switch (action.type) {
-    case START_CONVERT: {
+    case START_PROCESS: {
       return {
         ...state,
         mode: 'PROCESSING',
       };
     }
 
-    case CANCEL_CONVERT: {
+    case CANCEL_PROCESS: {
       return {
         ...state,
         mode: 'CANCELLED',
       };
     }
 
-    case FINISH_CONVERT: {
+    case FINISH_PROCESS: {
       return {
         ...state,
         mode: 'FINISHED',

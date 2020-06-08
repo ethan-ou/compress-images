@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import ToolbarButton from './ToolbarButton';
 import { removeFiles, clearFiles } from '../store/files/actions';
-import { startConvert, cancelConvert } from '../store/convert/actions';
+import { startProcess, cancelProcess } from '../store/process/actions';
 import { RootState } from '../store';
 
 interface ReactProps {
@@ -165,10 +165,10 @@ function Toolbar(props: Props): ReactElement {
         {icons.settings}
       </ToolbarButton>
     ),
-    convert: (
+    process: (
       <ToolbarButton
-        onClick={() => props.startConvert()}
-        text="Convert"
+        onClick={() => props.startProcess()}
+        text="Process"
         buttonStyles="bg-green-200 hover:bg-green-300 text-green-900 col-span-2"
       >
         {icons.play}
@@ -176,7 +176,7 @@ function Toolbar(props: Props): ReactElement {
     ),
     cancel: (
       <ToolbarButton
-        onClick={() => props.cancelConvert()}
+        onClick={() => props.cancelProcess()}
         text="Cancel"
         buttonStyles="bg-red-200 hover:bg-red-300 text-red-800 col-span-2"
       >
@@ -195,7 +195,7 @@ function Toolbar(props: Props): ReactElement {
       {button.settings}
       <div className="hidden sm:block" />
       {props.mode === 'INITIAL' || props.mode === 'FINISHED' || props.mode === 'CANCELLED'
-        ? button.convert
+        ? button.process
         : button.cancel}
     </div>
   );
@@ -203,14 +203,14 @@ function Toolbar(props: Props): ReactElement {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    mode: state.convert.mode,
+    mode: state.process.mode,
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   removeFiles: () => dispatch(removeFiles()),
   clearFiles: () => dispatch(clearFiles()),
-  startConvert: () => dispatch(startConvert()),
-  cancelConvert: () => dispatch(cancelConvert()),
+  startProcess: () => dispatch(startProcess()),
+  cancelProcess: () => dispatch(cancelProcess()),
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
