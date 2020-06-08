@@ -69,8 +69,8 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(() => {
-  protocol.registerFileProtocol('file', (request, cb) => {
+  protocol.registerFileProtocol('file', (request, callback) => {
     const pathname = decodeURI(request.url.replace('file:///', ''));
-    cb(pathname);
+    callback(pathname);
   });
 });
