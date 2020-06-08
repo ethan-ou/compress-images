@@ -3,15 +3,15 @@ import os from 'os';
 
 const queue = new PQueue({ concurrency: os.cpus().length });
 
-async function handlePromises(promises): Promise<any> {
+async function handlePromises(promises: any[]): Promise<any> {
   return Promise.all(
     promises.map((promise, i) =>
       promise
-        .then((value) => ({
+        .then((value: any) => ({
           status: 'fulfilled',
           value,
         }))
-        .catch((reason) => ({
+        .catch((reason: any) => ({
           status: 'rejected',
           reason,
         }))
