@@ -2,8 +2,7 @@ import { app, BrowserWindow, protocol } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import initIpcListeners from './electron/listeners';
-
-let win: BrowserWindow | null;
+import { getWindow, setWindow } from './window';
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -15,12 +14,12 @@ const installExtensions = async () => {
   ).catch(console.log); // eslint-disable-line no-console
 };
 
-const createWindow = async () => {
+const createWindow = async (): Promise<BrowserWindow> => {
   if (process.env.NODE_ENV !== 'production') {
     await installExtensions();
   }
 
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -51,9 +50,20 @@ const createWindow = async () => {
   }
 
   win.on('closed', () => {
-    win = null;
+    setWindow(null);
   });
+
+  return win;
 };
+
+app.on(
+  'activate',
+  async (): Promise<void> => {
+    if (!getWindow()) {
+      setWindow(await createWindow());
+    }
+  }
+);
 
 app.on('ready', createWindow);
 
@@ -64,7 +74,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (win === null) {
+  if (getWindow() === null) {
     createWindow();
   }
 });
