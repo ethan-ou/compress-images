@@ -118,7 +118,7 @@
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
-    "electron": "^8.3.1",
+    "electron": "^9.0.4",
     "electron-builder": "^22.7.0",
     "electron-devtools-installer": "^3.0.0",
     "eslint": "^6.8.0",
@@ -154,6 +154,7 @@
   "dependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
     "file-selector": "^0.1.12",
+    "fs-extra": "^9.0.1",
     "imagemin": "^7.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-mozjpeg": "^9.0.0",
@@ -167,7 +168,7 @@
     "react-dropzone": "^11.0.1",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "sharp": "^0.25.3",
+    "sharp": "^0.25.4",
     "shortid": "^2.2.15",
     "tailwindcss": "^1.4.6"
   }
