@@ -52,8 +52,7 @@ const defaults = {
 async function compressImageType(
   pipeline: Sharp,
   plugin: Plugin,
-  outputPath: string,
-  options: Options
+  outputPath: string
 ): Promise<any> {
   return pipeline.toBuffer().then((sharpBuffer: Buffer) =>
     imagemin
@@ -74,7 +73,7 @@ async function compressPng(pipeline: Sharp, outputPath: string, options: Options
     strip: !!options.stripMetadata, // Must be a bool
   });
 
-  return compressImageType(pipeline, settings, outputPath, options);
+  return compressImageType(pipeline, settings, outputPath);
 }
 
 async function compressJpeg(pipeline: Sharp, outputPath: string, options: Options) {
@@ -83,7 +82,7 @@ async function compressJpeg(pipeline: Sharp, outputPath: string, options: Option
     progressive: options.jpegProgressive,
   });
 
-  return compressImageType(pipeline, settings, outputPath, options);
+  return compressImageType(pipeline, settings, outputPath);
 }
 
 async function compressWebP(pipeline: Sharp, outputPath: string, options: Options) {
@@ -92,12 +91,12 @@ async function compressWebP(pipeline: Sharp, outputPath: string, options: Option
     metadata: options.stripMetadata ? `none` : `all`,
   });
 
-  return compressImageType(pipeline, settings, outputPath, options);
+  return compressImageType(pipeline, settings, outputPath);
 }
 
 async function compressSvg(pipeline: Sharp, outputPath: string, options: Options) {
   const settings = imageminSvgo();
-  return compressImageType(pipeline, settings, outputPath, options);
+  return compressImageType(pipeline, settings, outputPath);
 }
 
 async function compressGif(pipeline: Sharp, outputPath: string, options: Options) {
@@ -105,7 +104,7 @@ async function compressGif(pipeline: Sharp, outputPath: string, options: Options
     colors: options.gifColors,
     optimizationLevel: options.gifOptimisationLevel,
   });
-  return compressImageType(pipeline, settings, outputPath, options);
+  return compressImageType(pipeline, settings, outputPath);
 }
 
 // Check file path input
