@@ -14,9 +14,9 @@
     "start": "electron .",
     "lint": "eslint --ext=jsx,js,tsx,ts src",
     "prettier": "prettier --write .",
-    "test": "jest '(\\/test\\/(?!e2e/)).*'",
+    "test": "jest",
     "pretest:e2e": "npm run build",
-    "test:e2e": "jest '(\\/test\\/e2e/).*'",
+    "test:e2e": "jest",
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
     "postinstall": "electron-builder install-app-deps"
@@ -39,7 +39,7 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testRegex": "(/test/.+\\.spec)\\.tsx?$",
+    "testRegex": "(/test/.+\\.test)\\.tsx?$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
