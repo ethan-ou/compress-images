@@ -1,15 +1,24 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
+const nodeModules = {};
+fs.readdirSync('node_modules')
+  .filter((item) => ['.bin'].indexOf(item) === -1) // exclude the .bin folder
+  .forEach((mod) => {
+    nodeModules[mod] = 'commonjs ' + mod;
+  });
+
 module.exports = merge.smart(baseConfig, {
   target: 'electron-main',
   entry: {
     main: './src/main/main.ts',
   },
+  externals: nodeModules,
   module: {
     rules: [
       {
