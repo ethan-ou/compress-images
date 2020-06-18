@@ -1,13 +1,7 @@
-import {
-  START_PROCESS,
-  CANCEL_PROCESS,
-  ProcessState,
-  FINISH_PROCESS,
-  ProcessActionTypes,
-} from './types';
+import { START_PROCESS, STOP_PROCESS, ProcessState, ProcessActionTypes } from './types';
 
 const initialState: ProcessState = {
-  mode: 'INITIAL',
+  mode: 'WAITING',
 };
 
 export function processReducer(state = initialState, action: ProcessActionTypes): ProcessState {
@@ -19,17 +13,10 @@ export function processReducer(state = initialState, action: ProcessActionTypes)
       };
     }
 
-    case CANCEL_PROCESS: {
+    case STOP_PROCESS: {
       return {
         ...state,
-        mode: 'CANCELLED',
-      };
-    }
-
-    case FINISH_PROCESS: {
-      return {
-        ...state,
-        mode: 'FINISHED',
+        mode: 'WAITING',
       };
     }
 
