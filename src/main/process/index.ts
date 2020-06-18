@@ -8,14 +8,18 @@ const queue = new Queue({ concurrency: os.cpus().length });
 async function createProcess(
   files: AppFile[],
   options: any,
-  onSuccess: (arg0: AppFile, ...args: any) => void,
-  onError: (arg0: Error, ...args: any) => void
+  onProcessing: (arg0: AppFile) => void,
+  onSuccess: (arg0: AppFile) => void,
+  onError: (arg0: AppFile, arg1: Error) => void
 ): Promise<any> {
   const promises = files.map(async (file) =>
     queue
-      .add(async () => processFile(file.path, options.outputPath, file, options.settings))
-      .then((item, ...args) => onSuccess(item, ...args))
-      .catch((error: Error, ...args) => onError(error, ...args))
+      .add(async () => {
+        onProcessing(file);
+        return processFile(file.path, options.outputPath, file, options.settings);
+      })
+      .then(() => onSuccess(file))
+      .catch((error: Error) => onError(file, error))
   );
 
   return Promise.all(
@@ -37,12 +41,12 @@ async function pauseProcess(): Promise<void> {
   return queue.pause();
 }
 
-async function endProcess(): Promise<void> {
+async function cancelProcess(): Promise<void> {
   return queue.clear();
 }
 
 export default {
   create: createProcess,
   pause: pauseProcess,
-  end: endProcess,
+  cancel: cancelProcess,
 };
