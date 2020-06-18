@@ -22,6 +22,6 @@ export const cancelProcess = (): ThunkActionT => (dispatch: ThunkDispatchT): voi
   dispatch(stopProcessMode());
 };
 
-export const endProcess = (): ThunkActionT => (dispatch): void => {
+export const endProcess = (): ThunkActionT => (dispatch: ThunkDispatchT): void => {
   dispatch(stopProcessMode());
 };
