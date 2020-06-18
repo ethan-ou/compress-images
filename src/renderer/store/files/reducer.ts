@@ -94,6 +94,8 @@ export function filesReducer(state = initialState, action: FilesActionTypes): Fi
       return { ...state, files };
     }
 
+    // Add state to requeue files if they have thrown an error.
+
     default: {
       return state;
     }

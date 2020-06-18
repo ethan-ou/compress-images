@@ -44,6 +44,7 @@ interface FileSuccessAction {
 interface FileErrorAction {
   type: typeof FILE_ERROR;
   file: AppFile;
+  error: Error;
 }
 
 interface FileProcessingAction {

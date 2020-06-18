@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import ToolbarButton from './ToolbarButton';
 import { removeFiles, clearFiles } from '../store/files/actions';
-import { startProcess, stopProcess } from '../store/process/actions';
-import { RootState } from '../store';
+import { startProcess, cancelProcess } from '../store/process/actions';
+import { RootState, ThunkDispatchT } from '../store';
 import { TableState, TableSelectProps, TableStateProps } from './TableProvider';
 
 interface ReactProps {
@@ -185,7 +185,7 @@ function Toolbar(props: Props): ReactElement {
     ),
     cancel: (
       <ToolbarButton
-        onClick={() => props.stopProcess()}
+        onClick={() => props.cancelProcess()}
         text="Cancel"
         buttonStyles="bg-red-200 hover:bg-red-300 text-red-800 col-span-2"
       >
@@ -203,9 +203,7 @@ function Toolbar(props: Props): ReactElement {
       <div className="hidden sm:block" />
       {button.settings}
       <div className="hidden sm:block" />
-      {props.mode === 'INITIAL' || props.mode === 'FINISHED' || props.mode === 'CANCELLED'
-        ? button.process
-        : button.cancel}
+      {props.mode === 'WAITING' ? button.process : button.cancel}
     </div>
   );
 }
@@ -215,11 +213,11 @@ const mapStateToProps = (state: RootState) => {
     mode: state.process.mode,
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatchT) => ({
   removeFiles: (location: number[]) => dispatch(removeFiles(location)),
   clearFiles: () => dispatch(clearFiles()),
   startProcess: () => dispatch(startProcess()),
-  stopProcess: () => dispatch(stopProcess()),
+  cancelProcess: () => dispatch(cancelProcess()),
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

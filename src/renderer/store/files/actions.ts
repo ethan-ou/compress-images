@@ -30,8 +30,8 @@ export function fileSuccess(file: AppFile): FilesActionTypes {
   return { type: FILE_SUCCESS, file };
 }
 
-export function fileError(file: AppFile): FilesActionTypes {
-  return { type: FILE_ERROR, file };
+export function fileError(file: AppFile, error: Error): FilesActionTypes {
+  return { type: FILE_ERROR, file, error };
 }
 
 export function fileProcessing(file: AppFile): FilesActionTypes {
