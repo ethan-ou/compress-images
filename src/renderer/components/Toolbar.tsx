@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import ToolbarButton from './ToolbarButton';
 import { removeFiles, clearFiles } from '../store/files/actions';
-import { startProcess, cancelProcess } from '../store/process/actions';
+import { startProcess, stopProcess } from '../store/process/actions';
 import { RootState } from '../store';
+import { TableState, TableSelectProps, TableStateProps } from './TableProvider';
 
 interface ReactProps {
   openDropzone: () => void;
+  handleTableSelect: TableSelectProps;
+  getTableState: TableStateProps;
 }
 
 type Props = ReactProps & StateProps & DispatchProps;
@@ -140,7 +143,10 @@ function Toolbar(props: Props): ReactElement {
     ),
     remove: (
       <ToolbarButton
-        onClick={() => props.removeFiles()}
+        onClick={() => {
+          const state = props.getTableState();
+          props.removeFiles(state.selected.items);
+        }}
         text="Remove"
         buttonStyles="bg-red-200 hover:bg-red-300 text-red-800 col-span-2"
       >
@@ -149,7 +155,10 @@ function Toolbar(props: Props): ReactElement {
     ),
     clear: (
       <ToolbarButton
-        onClick={() => props.clearFiles()}
+        onClick={(e) => {
+          props.clearFiles();
+          props.handleTableSelect(e, null);
+        }}
         text="Clear All"
         buttonStyles="bg-gray-300 hover:bg-gray-400 text-gray-800 col-span-2"
       >
@@ -176,7 +185,7 @@ function Toolbar(props: Props): ReactElement {
     ),
     cancel: (
       <ToolbarButton
-        onClick={() => props.cancelProcess()}
+        onClick={() => props.stopProcess()}
         text="Cancel"
         buttonStyles="bg-red-200 hover:bg-red-300 text-red-800 col-span-2"
       >
@@ -207,10 +216,10 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  removeFiles: () => dispatch(removeFiles()),
+  removeFiles: (location: number[]) => dispatch(removeFiles(location)),
   clearFiles: () => dispatch(clearFiles()),
   startProcess: () => dispatch(startProcess()),
-  cancelProcess: () => dispatch(cancelProcess()),
+  stopProcess: () => dispatch(stopProcess()),
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

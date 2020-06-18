@@ -1,21 +1,22 @@
 import React, { ReactElement } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import prettyBytes from 'pretty-bytes';
 import { DropzoneInputProps, DropzoneRootProps } from 'react-dropzone';
-import { selectFiles } from '../store/files/actions';
 import Table from './Table';
 import TableRow from './TableRow';
 import { RootState } from '../store';
-import { FileEvent } from '../store/files/types';
+import { TableStateProps, TableSelectProps } from './TableProvider';
+import { AppFile } from '../../types';
 
 interface ReactProps {
   getRootProps: (props?: DropzoneRootProps) => DropzoneRootProps;
   getInputProps: (props?: DropzoneInputProps) => DropzoneInputProps;
   open: () => void;
+  getTableState: TableStateProps;
+  handleTableSelect: TableSelectProps;
 }
 
-type Props = ReactProps & StateProps & DispatchProps;
+type Props = ReactProps & StateProps;
 
 function Dropzone(props: Props): ReactElement {
   const handleSelected = (state: number[], index: number): boolean => {
@@ -40,26 +41,26 @@ function Dropzone(props: Props): ReactElement {
   const files = (
     <div
       {...props.getRootProps({
-        className: 'w-full',
+        className: 'w-full h-full',
       })}
     >
       <input {...props.getInputProps()} />
       <Table head={['Name', 'Size', 'Status']}>
-        {props.files.map((file, idx) => (
+        {props.files.map((file: AppFile, idx: number) => (
           <TableRow
             key={file.id}
             name={file.name}
             size={prettyBytes(file.size)}
             img={file.path}
             even={idx}
-            selected={handleSelected(props.selected.items, idx)}
+            selected={handleSelected(props.getTableState().selected.items, idx)}
             status={file.status}
-            onClick={(e) => props.selectFiles(e, idx)}
+            onClick={(e) => props.handleTableSelect(e, idx)}
           />
         ))}
       </Table>
       {/* eslint-disable-next-line */}
-      <div className="" onMouseDown={(e) => props.selectFiles(e, null)} />
+      <div className="h-full" onMouseDown={(e) => props.handleTableSelect(e, null)} />
     </div>
   );
 
@@ -69,15 +70,9 @@ function Dropzone(props: Props): ReactElement {
 const mapStateToProps = (state: RootState) => {
   return {
     files: state.files.files,
-    selected: state.files.selected,
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  selectFiles: (event: FileEvent, index: number | null) => dispatch(selectFiles(event, index)),
-});
-
 type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dropzone);
+export default connect(mapStateToProps)(Dropzone);
