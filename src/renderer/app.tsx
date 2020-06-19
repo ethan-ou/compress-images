@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 
-import Main from './pages/Main';
+import App from './pages/App';
 import store from './store';
 import './styles.css';
 
@@ -23,4 +23,4 @@ const render = (Component: () => JSX.Element) => {
   );
 };
 
-render(Main);
+render(App);
