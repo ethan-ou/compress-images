@@ -10,6 +10,11 @@ export default function Main(): ReactElement {
 
   return (
     <div className="h-screen flex flex-col">
+      <Toolbar
+        openDropzone={open}
+        handleTableSelect={handleTableSelect}
+        getTableState={getTableState}
+      />
       <div className="flex overflow-auto flex-grow w-full">
         <Dropzone
           getRootProps={getRootProps}

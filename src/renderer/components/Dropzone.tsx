@@ -41,7 +41,7 @@ function Dropzone(props: Props): ReactElement {
   const files = (
     <div
       {...props.getRootProps({
-        className: 'w-full h-full',
+        className: 'w-full',
       })}
     >
       <input {...props.getInputProps()} />

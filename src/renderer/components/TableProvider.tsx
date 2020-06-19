@@ -1,6 +1,5 @@
 import { useReducer } from 'react';
 import { range } from '../utils';
-import { FileEvent } from '../store/files/types';
 
 const DESELECT_ALL = 'DESELECT_ALL';
 const SELECT = 'SELECT';
