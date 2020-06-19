@@ -13,18 +13,15 @@ interface PathOptions {
 //     }
 // }
 
-export function newFile(filePath: string, options: PathOptions): string {
-  const fileNameNoExt = path.basename(filePath, path.extname(filePath));
+export function sameFolder(filePath: string, options: PathOptions): string {
+  const fileBasename = path.basename(filePath, path.extname(filePath));
   const fileExt = path.extname(filePath);
 
   return path.format({
     dir: path.dirname(filePath),
-    base: `${options.prefix}${fileNameNoExt}${options.suffix}${fileExt}`,
+    base: `${options.prefix}${fileBasename}${options.suffix}`,
+    ext: fileExt,
   });
-}
-
-export function overwriteFile(filePath: string, options: PathOptions): string {
-  return filePath;
 }
 
 export function newFolder(filePath: string, options: PathOptions): string {
@@ -37,7 +34,7 @@ export function newFolder(filePath: string, options: PathOptions): string {
   });
 }
 
-export function selectFolder(filePath: string, options: PathOptions): string {
+export function selectDirectory(filePath: string, options: PathOptions): string {
   const fileName = path.basename(filePath);
 
   return path.format({
