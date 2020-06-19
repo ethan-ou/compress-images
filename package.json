@@ -95,6 +95,7 @@
     "@babel/preset-typescript": "^7.10.1",
     "@fullhuman/postcss-purgecss": "^2.2.0",
     "@hot-loader/react-dom": "^16.13.0",
+    "@svgr/webpack": "^5.4.0",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/imagemin": "^7.0.0",
     "@types/imagemin-gifsicle": "^5.2.0",

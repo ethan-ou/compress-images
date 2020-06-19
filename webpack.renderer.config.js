@@ -36,7 +36,23 @@ module.exports = merge.smart(baseConfig, {
         ],
       },
       {
-        test: /\.(gif|png|jpe?g|svg)$/,
+        test: /\.svg$/,
+        use: {
+          loader: '@svgr/webpack',
+          options: {
+            titleProp: true,
+            svgoConfig: {
+              plugins: [
+                {
+                  removeViewBox: false,
+                },
+              ],
+            },
+          },
+        },
+      },
+      {
+        test: /\.(gif|png|jpe?g)$/,
         use: [
           'file-loader',
           {
