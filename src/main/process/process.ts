@@ -13,41 +13,23 @@ interface Options {
   quality: number;
   height?: number;
   width?: number;
-  cropFocus?: number;
-  pngCompressionLevel?: number;
-  pngCompressionSpeed?: number;
-  jpegQuality?: number;
-  pngQuality?: number;
-  webpQuality?: number;
-  jpegProgressive?: boolean;
+  progressive?: boolean;
   useMozJpeg?: boolean;
-  gifColors?: number;
-  gifOptimisationLevel?: number;
   rotate?: number;
-  trim?: number;
-  background?: string;
-  fit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside' | undefined;
   stripMetadata?: boolean;
-  toFormat?: Formats;
+  toFormat?: ForcedFormats;
 }
 
-type Formats = 'jpeg' | 'png' | 'webp' | 'tiff';
+type Formats = 'jpeg' | 'png' | 'webp' | 'tiff' | 'gif' | 'svg';
+type ForcedFormats = 'jpeg' | 'png' | 'webp' | 'tiff';
 
-const defaults = {
-  quality: 80,
-  jpegProgressive: true,
-  pngCompressionLevel: 9,
-  // default is 4 (https://github.com/kornelski/pngquant/blob/4219956d5e080be7905b5581314d913d20896934/rust/bin.rs#L61)
-  pngCompressionSpeed: 4,
-  base64: true,
-  grayscale: false,
-  duotone: false,
-  pathPrefix: ``,
-  toFormat: ``,
-  toFormatBase64: ``,
-  sizeByPixelDensity: false,
-  rotate: 0,
-};
+function resolveFileExtension(outputPath: string, extension: Formats) {
+  return path.format({
+    dir: path.dirname(outputPath),
+    base: path.basename(outputPath, path.extname(outputPath)),
+    ext: extension,
+  });
+}
 
 async function compressImageType(
   pipeline: Sharp,
@@ -65,46 +47,43 @@ async function compressImageType(
 
 async function compressPng(pipeline: Sharp, outputPath: string, options: Options) {
   const settings = imageminPngquant({
-    quality: [
-      options.pngQuality || options.quality,
-      Math.min((options.pngQuality || options.quality) + 25, 100),
-    ], // e.g. 40-65
-    speed: options.pngCompressionSpeed ? options.pngCompressionSpeed : undefined,
+    quality: [options.quality, Math.min(options.quality + 25, 100)], // e.g. 40-65
     strip: !!options.stripMetadata, // Must be a bool
   });
 
-  return compressImageType(pipeline, settings, outputPath);
+  return compressImageType(pipeline, settings, resolveFileExtension(outputPath, 'png'));
 }
 
 async function compressJpeg(pipeline: Sharp, outputPath: string, options: Options) {
   const settings = imageminMozjpeg({
-    quality: options.jpegQuality || options.quality,
-    progressive: options.jpegProgressive,
+    quality: options.quality,
+    progressive: options.progressive,
   });
 
-  return compressImageType(pipeline, settings, outputPath);
+  return compressImageType(pipeline, settings, resolveFileExtension(outputPath, 'jpeg'));
 }
 
 async function compressWebP(pipeline: Sharp, outputPath: string, options: Options) {
   const settings = imageminWebp({
-    quality: options.webpQuality || options.quality,
+    quality: options.quality,
     metadata: options.stripMetadata ? `none` : `all`,
   });
 
-  return compressImageType(pipeline, settings, outputPath);
+  return compressImageType(pipeline, settings, resolveFileExtension(outputPath, 'webp'));
 }
 
 async function compressSvg(pipeline: Sharp, outputPath: string, options: Options) {
   const settings = imageminSvgo();
-  return compressImageType(pipeline, settings, outputPath);
+  return compressImageType(pipeline, settings, resolveFileExtension(outputPath, 'svg'));
 }
 
 async function compressGif(pipeline: Sharp, outputPath: string, options: Options) {
+  // Colors start reducing at 75% quality.
   const settings = imageminGifsicle({
-    colors: options.gifColors,
-    optimizationLevel: options.gifOptimisationLevel,
+    colors: Math.min(Math.round(options.quality * 3.4), 255),
+    optimizationLevel: 3,
   });
-  return compressImageType(pipeline, settings, outputPath);
+  return compressImageType(pipeline, settings, resolveFileExtension(outputPath, 'gif'));
 }
 
 // Check file path input
@@ -130,10 +109,6 @@ export default async function processFile(
     await fs.ensureDir(path.dirname(outputPath));
     let clonedPipeline: Sharp = pipeline.clone();
 
-    if (options.trim) {
-      clonedPipeline = clonedPipeline.trim(options.trim);
-    }
-
     // Sharp will auto-rotate images with EXIF data
     if (!options.rotate) {
       clonedPipeline = clonedPipeline.rotate();
@@ -153,17 +128,16 @@ export default async function processFile(
 
     clonedPipeline
       .resize(roundedWidth, roundedHeight, {
-        position: options.cropFocus,
-        fit: options.fit,
-        background: options.background,
+        fit: 'inside',
+        background: { r: 0, b: 0, g: 0, alpha: 0 },
       })
       .png({
-        compressionLevel: options.pngCompressionLevel,
-        adaptiveFiltering: false,
+        progressive: options.progressive,
         force: options.toFormat === `png`,
       })
       .webp({
-        quality: options.webpQuality || options.quality,
+        quality: 100,
+        lossless: true,
         force: options.toFormat === `webp`,
       })
       .tiff({
@@ -174,8 +148,8 @@ export default async function processFile(
     // jpeg
     if (!options.useMozJpeg) {
       clonedPipeline = clonedPipeline.jpeg({
-        quality: options.jpegQuality || options.quality,
-        progressive: options.jpegProgressive,
+        quality: options.quality,
+        progressive: options.progressive,
         force: options.toFormat === `jpeg`,
       });
     }
@@ -214,7 +188,7 @@ export default async function processFile(
     }
 
     try {
-      await clonedPipeline.toFile(outputPath);
+      await clonedPipeline.toFile(resolveFileExtension(outputPath, options.toFormat || 'jpeg'));
     } catch (err) {
       throw new Error(`Failed to write ${file} into ${outputPath}. (${err.message})`);
     }
