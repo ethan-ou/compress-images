@@ -6,6 +6,7 @@ import {
   REMOVE_FILES,
   CLEAR_FILES,
   QUEUE_FILES,
+  CANCEL_FILES,
   FILE_SUCCESS,
   FILE_ERROR,
   FILE_PROCESSING,
@@ -43,6 +44,19 @@ export function filesReducer(state = initialState, action: FilesActionTypes): Fi
 
     case CLEAR_FILES: {
       return { ...state, files: [] };
+    }
+
+    case CANCEL_FILES: {
+      const files = state.files.map(
+        (file): AppFile => {
+          if (file.status === 'Queued' || file.status === 'Waiting') {
+            return { ...file, status: 'Waiting' };
+          }
+          return file;
+        }
+      );
+
+      return { ...state, files };
     }
 
     case QUEUE_FILES: {

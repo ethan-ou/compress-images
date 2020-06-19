@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import { AppFile } from '../../../types';
 import store, { ThunkDispatchT } from '../../store';
-import { endProcess } from '../../store/process/actions';
+import { finishProcess } from '../../store/process/actions';
 import { fileError, fileSuccess, fileProcessing } from '../../store/files/actions';
 
 const dispatchThunk = store.dispatch as ThunkDispatchT;
@@ -20,7 +20,7 @@ export default function initIpcListeners(): void {
   });
 
   ipcRenderer.on('process:finish', (_) => {
-    dispatchThunk(endProcess());
+    dispatchThunk(finishProcess());
   });
 
   // Add process:confirm to confirm whether a file should be overwritten.

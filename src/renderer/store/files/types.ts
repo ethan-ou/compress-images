@@ -4,6 +4,7 @@ export const ADD_FILES = 'ADD_FILES';
 export const REMOVE_FILES = 'REMOVE_FILES';
 export const CLEAR_FILES = 'CLEAR_FILES';
 export const QUEUE_FILES = 'QUEUE_FILES';
+export const CANCEL_FILES = 'CANCEL_FILES';
 export const FILE_SUCCESS = 'FILE_SUCCESS';
 export const FILE_ERROR = 'FILE_ERROR';
 export const FILE_PROCESSING = 'FILE_PROCESSING';
@@ -36,6 +37,10 @@ interface QueueFilesAction {
   type: typeof QUEUE_FILES;
 }
 
+interface CancelFilesAction {
+  type: typeof CANCEL_FILES;
+}
+
 interface FileSuccessAction {
   type: typeof FILE_SUCCESS;
   file: AppFile;
@@ -57,6 +62,7 @@ export type FilesActionTypes =
   | RemoveFilesAction
   | ClearFilesAction
   | QueueFilesAction
+  | CancelFilesAction
   | FileSuccessAction
   | FileErrorAction
   | FileProcessingAction;

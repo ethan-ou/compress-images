@@ -1,5 +1,5 @@
 import { ProcessActionTypes, START_PROCESS, STOP_PROCESS } from './types';
-import { queueFiles } from '../files/actions';
+import { queueFiles, cancelFiles } from '../files/actions';
 import { ThunkActionT, ThunkDispatchT } from '..';
 import { cancelMainProcess, startMainProcess } from '../../electron/ipcRenderer/senders';
 
@@ -19,9 +19,10 @@ export const startProcess = (): ThunkActionT => (dispatch: ThunkDispatchT, getSt
 
 export const cancelProcess = (): ThunkActionT => (dispatch: ThunkDispatchT): void => {
   cancelMainProcess();
+  dispatch(cancelFiles());
   dispatch(stopProcessMode());
 };
 
-export const endProcess = (): ThunkActionT => (dispatch: ThunkDispatchT): void => {
+export const finishProcess = (): ThunkActionT => (dispatch: ThunkDispatchT): void => {
   dispatch(stopProcessMode());
 };

@@ -3,6 +3,7 @@ import {
   REMOVE_FILES,
   CLEAR_FILES,
   QUEUE_FILES,
+  CANCEL_FILES,
   FilesActionTypes,
   FILE_SUCCESS,
   FILE_ERROR,
@@ -24,6 +25,10 @@ export function clearFiles(): FilesActionTypes {
 
 export function queueFiles(): FilesActionTypes {
   return { type: QUEUE_FILES };
+}
+
+export function cancelFiles(): FilesActionTypes {
+  return { type: CANCEL_FILES };
 }
 
 export function fileSuccess(file: AppFile): FilesActionTypes {
